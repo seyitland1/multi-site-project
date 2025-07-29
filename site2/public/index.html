@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site2 - Modern Web Sitesi</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #00b894, #00a085);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .online {
+            color: #2ecc71;
+        }
+        .offline {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💼 Site2</h1>
+        <p>Modern İş Sitesi - Profesyonel Çözümler</p>
+        <div class="status">
+            <span id="status">Durum kontrol ediliyor...</span>
+            <div class="loading" id="loading"></div>
+        </div>
+        <br><br>
+        <a href="http://localhost:3001" class="btn" id="enterBtn" style="display:none;">Siteye Gir</a>
+    </div>
+
+    <script>
+        function checkSiteStatus() {
+            const statusEl = document.getElementById('status');
+            const loadingEl = document.getElementById('loading');
+            const btnEl = document.getElementById('enterBtn');
+            
+            fetch('http://localhost:3001')
+                .then(response => {
+                    if (response.ok) {
+                        statusEl.innerHTML = '🟢 Site Aktif';
+                        statusEl.className = 'online';
+                        loadingEl.style.display = 'none';
+                        btnEl.style.display = 'inline-block';
+                    } else {
+                        throw new Error('Site yanıt vermiyor');
+                    }
+                })
+                .catch(error => {
+                    statusEl.innerHTML = '🔴 Site Çevrimdışı';
+                    statusEl.className = 'offline';
+                    loadingEl.style.display = 'none';
+                    btnEl.innerHTML = 'Siteyi Başlat';
+                    btnEl.style.display = 'inline-block';
+                });
+        }
+        
+        window.onload = function() {
+            setTimeout(checkSiteStatus, 1000);
+        };
+        
+        setInterval(checkSiteStatus, 30000);
+    </script>
+</body>
+</html>
